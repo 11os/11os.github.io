@@ -18,11 +18,13 @@ jobs:
           cache: "npm"
       - run: yarn
       - run: yarn docs:build
-      - run: cd docs/.vitepress/dist
-      - run: ls -al
-      - run: git init
-      - run: git config --global user.email "270680516@q.com"
-      - run: git config --global user.name "11os"
-      - run: git add -A
-      - run: git commit -m 'deploy'
-      - run: git push -f https://${{ secrets.GH_PAGES_CI }}@github.com/11os/11os.github.io.git gh-pages
+      - name: deploy
+        run: |
+          ls -al
+          git init
+          git config --global user.email "270680516@q.com"
+          git config --global user.name "11os"
+          git add -A
+          git commit -m 'deploy'
+          git push -f https://${{ secrets.GH_PAGES_CI }}@github.com/11os/11os.github.io.git gh-pages
+        working-directory: docs/.vitepress/dist
