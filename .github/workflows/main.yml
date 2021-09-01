@@ -15,9 +15,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "lts/*"
+          cache: "npm"
       - run: yarn
       - run: yarn docs:build
       - run: cd docs/.vitepress/dist
+      - run: ls -al
       - run: git init
       - run: git config --global user.email "270680516@q.com"
       - run: git config --global user.name "11os"
