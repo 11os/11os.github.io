@@ -2,10 +2,10 @@ name: CI
 
 env:
   SERVER: production
-  
+
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -14,12 +14,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - run: yarn
       - run: yarn docs:build
       - run: cd docs/.vitepress/dist
       - run: git init
       - run: git add -A
       - run: git commit -m 'deploy'
+      - run: git config --global user.email "270680516@q.com"
+      - run: git config --global user.name "11os"
       - run: git push -f https://${{ secrets.GH_PAGES_CI }}@github.com/11os/11os.github.io.git gh-pages
-
