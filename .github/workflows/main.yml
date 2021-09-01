@@ -12,19 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: init gh-pages
+        run: |
+          git clone -b gh-pages https://${{ secrets.GH_PAGES_CI }}@github.com/11os/11os.github.io.git
+        working-directory: docs/.vitepress/dist
       - uses: actions/setup-node@v2
         with:
           node-version: "lts/*"
           cache: "npm"
       - run: yarn
       - run: yarn docs:build
-      - name: deploy
+      - name: deploy gh-pages
         run: |
           ls -al
-          git init
-          git config --global user.email "270680516@q.com"
-          git config --global user.name "11os"
           git add -A
           git commit -m 'deploy'
-          git push -f https://${{ secrets.GH_PAGES_CI }}@github.com/11os/11os.github.io.git gh-pages
+          git push -f
         working-directory: docs/.vitepress/dist
