@@ -9,7 +9,7 @@ deploy:
   provider: pages
   skip_cleanup: true
   local_dir: docs/.vitepress/dist
-  github_token: $CI
+  github_token: CI
   keep_history: true
   on:
     branch: docs
