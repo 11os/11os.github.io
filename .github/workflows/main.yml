@@ -26,6 +26,8 @@ jobs:
       - name: deploy gh-pages
         run: |
           ls -al
+          git config --global user.email "270680516@qq.com"
+          git config --global user.name "11os"
           git add -A
           git commit -m 'deploy'
           git push -f
