@@ -8,8 +8,9 @@ Hugo 个人站点，托管在 GitHub Pages（仓库 `11os/11os.github.io`）。
 - 主题：Stack `v4.0.3`，以 **vendor 方式**提交在 `themes/hugo-theme-stack/`（不用 submodule —— 代理环境 git clone 会 502）
 - 站点配置：`config/_default/`（hugo.toml / params.toml / markup.toml）
 - 构建产物：`public/`（已 gitignore）
-- 部署：`.github/workflows/hugo.yaml`，官方 `deploy-pages` 链路，推 master 即发布
-- Pages 发布源：GitHub Actions（无需 .nojekyll）
+- 部署：`.github/workflows/hugo.yaml`，**只保留官方 `deploy-pages` 链路**（`build` + `deploy` 两个 job），推 master 即发布
+- Pages 发布源：**GitHub Actions**（`build_type=workflow`，2026-10-26 用 API 从 legacy/gh-pages 切换过来），远端 `gh-pages` 分支已删除；`github-pages` 环境的分支策略放行 `master`
+- **坑（已踩过）**：Pages 源若是「分支（gh-pages）」，`actions/deploy-pages` 必然报 `400 ... Deployments are only allowed from gh-pages`；用 `continue-on-error` 盖住只会让站点静默停更。两条链路只能留一条，改源和改 workflow 要配套
 
 ## 内容结构约定
 
