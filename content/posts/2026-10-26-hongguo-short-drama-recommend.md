@@ -12,7 +12,7 @@ draft: false
 
 先给网站，这篇只推荐这一个东西：
 
-> **红果长剧清单**：https://11os.github.io/hongguo-longdrama-list/
+> **红果长剧清单**：[https://11os.github.io/hongguo-longdrama-list/](https://11os.github.io/hongguo-longdrama-list/)
 
 在红果里找剧刷，最烦的是首页推荐位：你看得越多，它推得越像。这个网站解决的就是这件事——把红果上累计集数够长的剧全部拉出来，做成一张**能自己排序、自己筛选**的表。不用登录，纯静态页面，打开就能用。
 
@@ -94,7 +94,7 @@ draft: false
 
 **提交入口（点开填表就行，不用写代码）：**
 
-https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml
+[https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml](https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml)
 
 网站上那句「**没找到想要的剧？点这里推荐 ↗**」也是同一个入口。
 
@@ -124,6 +124,6 @@ https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.ym
 
 ---
 
-网站地址：https://11os.github.io/hongguo-longdrama-list/
+网站地址：[https://11os.github.io/hongguo-longdrama-list/](https://11os.github.io/hongguo-longdrama-list/)
 
-补剧 / 纠错：https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml
+补剧 / 纠错：[https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml](https://github.com/11os/hongguo-longdrama-list/issues/new?template=add-series.yml)
