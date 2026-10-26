@@ -2,20 +2,30 @@
 
 ## 项目性质
 
-VitePress 个人站点，托管在 GitHub Pages（仓库 `11os/11os.github.io`）。
+Hugo 个人站点，托管在 GitHub Pages（仓库 `11os/11os.github.io`）。
 
-- 框架：VitePress `^0.16.1`（`docs/` 为 docs 目录，配置在 `docs/.vitepress/config.js`）
-- 包管理：yarn（`yarn.lock` 是唯一 lockfile，CI 用 `yarn install`）
-- 脚本：`docs:dev` / `docs:build` / `docs:serve`
-- 部署：`.github/workflows/main.yml`，master 推送时构建 → 部署到 `gh-pages` 分支
-- 构建产物目录：`docs/.vitepress/dist`（临时产物，用完应清理）
+- 框架：Hugo `0.168.0` **extended**（必须 extended 版，Stack 主题编译 SCSS 依赖 libsass）
+- 主题：Stack `v4.0.3`，以 **vendor 方式**提交在 `themes/hugo-theme-stack/`（不用 submodule —— 代理环境 git clone 会 502）
+- 站点配置：`config/_default/`（hugo.toml / params.toml / markup.toml）
+- 构建产物：`public/`（已 gitignore）
+- 部署：`.github/workflows/hugo.yaml`，官方 `deploy-pages` 链路，推 master 即发布
+- Pages 发布源：GitHub Actions（无需 .nojekyll）
 
 ## 内容结构约定
 
-- `docs/index.md` — 首页（`layout: home`）
-- `docs/posts/` — 文章目录，文件名约定 `YYYY-MM-DD-标题.md`
-- `docs/about.md` — 关于页
+- `content/posts/` — 文章，frontmatter 用 `date`/`slug`/`categories`/`tags`
+- `content/about.md`、`content/search.md`、`content/archives.md` — 特殊页面（后两个是 Stack 要求的 layout）
+- `assets/img/` — 头像、图标（Stack v4 从 assets 而非 static 读取 favicon/avatar）
 
 ## 环境注意
 
-- 本机无 yarn，用 npm 安装依赖；装完必须 `git checkout -- yarn.lock` 并删除 `package-lock.json`。
+- 本机 Hugo 装在 `C:\Users\1\.workbuddy-ai\binaries\hugo\hugo.exe`，**不在 PATH**，调用要用完整路径。
+- **网络坑**：`github.com:443` 被拦截（git push 间歇 502），但 `api.github.com`/`codeload`/`raw.githubusercontent.com` 通。下载资源用 codeload/raw，不要 git clone。
+- Hugo 构建毫秒级，无需 Node/yarn/npm。
+
+## Stack v4 必记
+
+- 主题用 `toCSS`（libsass），libsass 在 Hugo 0.153+ 已弃用 —— 需 extended 版 Hugo
+- 语言码用 `zh` 而非 `zh-cn`；`hasCJKLanguage = true` 必须开（中文摘要/字数统计正确性）
+- favicon/avatar 放 `assets/img/`，路径在 params.toml 里写 `img/favicon.svg`
+- 菜单写在 `config/_default/hugo.toml` 的 `[menu]` 段，读 `.Site.Menus.main`
