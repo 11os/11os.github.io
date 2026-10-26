@@ -9,7 +9,7 @@ favicon        = "img/favicon.svg"
 [sidebar]
     avatar   = "img/avatar.svg"
     emoji    = "✏️"
-    subtitle = "You don't know study."
+    subtitle = "You can really dance."
 
 [article]
     [article.license]
