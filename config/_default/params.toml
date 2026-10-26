@@ -1,0 +1,36 @@
+mainSections   = ["posts"]
+rssFullContent = true
+favicon        = "img/favicon.svg"
+
+[footer]
+    since = 2026
+    copyright = "11os"
+
+[sidebar]
+    avatar   = "img/avatar.svg"
+    emoji    = "✏️"
+    subtitle = "You don't know study."
+
+[article]
+    [article.license]
+        enabled = true
+        default = "Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"
+
+[widgets]
+    homepage = [
+        { type = "search" },
+        { type = "archives", params = { limit = 5 } },
+        { type = "categories", params = { limit = 10 } },
+        { type = "tag-cloud", params = { limit = 20 } },
+    ]
+    page = [{ type = "toc" }]
+
+[comments]
+    enabled  = false
+    provider = "giscus"
+
+[cookies]
+    enabled = false
+    [cookies.categories]
+        analytics  = false
+        functional = false

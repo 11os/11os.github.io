@@ -1,0 +1,51 @@
+baseURL                = "https://11os.github.io/"
+title                  = "11os"
+theme                  = "hugo-theme-stack"
+locale                 = "zh"
+defaultContentLanguage = "zh"
+hasCJKLanguage         = true
+enableRobotsTXT        = true
+
+[pagination]
+    pagerSize = 10
+
+[permalinks]
+    posts = "/posts/:slug/"
+    page  = "/:slug/"
+
+[taxonomies]
+    category = "categories"
+    tag     = "tags"
+
+[services.rss]
+    limit = 30
+
+[params]
+    since = 2026
+
+[menu]
+    [[menu.main]]
+        name = "首页"
+        url = "/"
+        weight = 10
+
+    [[menu.main]]
+        name = "归档"
+        url = "/archives/"
+        weight = 20
+
+    [[menu.main]]
+        name = "分类"
+        url = "/categories/"
+        weight = 30
+
+    [[menu.main]]
+        name = "标签"
+        url = "/tags/"
+        weight = 40
+
+    [[menu.social]]
+        name = "GitHub"
+        url = "https://github.com/11os/11os.github.io"
+        icon = "brand-github"
+        weight = 10
