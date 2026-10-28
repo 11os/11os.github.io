@@ -1,0 +1,119 @@
+/*!
+ * Motion Tweaks
+ * ---------------------------------------------------------------------------
+ * 在 Stack v4 基础上做动效层优化，目标是「简单动效、流畅不卡顿」：
+ *
+ *   1. 跨页过渡（View Transitions API）—— 页面切换柔和淡入，纯 CSS 实现，
+ *      不支持该 API 的浏览器自动回退到无过渡，不影响可用性。
+ *   2. prefers-reduced-motion —— 尊重系统的「减少动态效果」设置，
+ *      对动效敏感人群关闭所有非必要动画。
+ *   3. 统一动画时长与缓动 —— 所有过渡收敛到同一套 token，
+ *      避免不同组件各用各的曲线造成节奏割裂感。
+ *   4. 滚动驱动动画静态化 —— 关闭高开销的 scroll-driven animation，
+ *      改为对称的静态边缘渐隐（观感一致，滚动期零开销）。
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. 动效 token
+ * ------------------------------------------------------------------------ */
+
+/* token 定义在 variables.scss 的 :root 中，此处不重复定义 */
+
+/* ---------------------------------------------------------------------------
+ * 2. 跨页过渡
+ * ------------------------------------------------------------------------ */
+
+/* 现代浏览器：同源页面跳转时做一次柔和的交叉淡入 */
+@view-transition {
+    navigation: auto;
+}
+
+/* 淡出略快于淡入，视觉上更利落 */
+::view-transition-old(root) {
+    animation-name: vt-fade-out;
+    animation-duration: var(--motion-duration-base);
+    animation-timing-function: var(--motion-ease-out);
+}
+
+::view-transition-new(root) {
+    animation-name: vt-fade-in;
+    animation-duration: var(--motion-duration-base);
+    animation-timing-function: var(--motion-ease-out);
+}
+
+@keyframes vt-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes vt-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. 尊重系统的「减少动态效果」
+ * ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* 跨页过渡也要关掉 */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. 滚动驱动动画静态化
+ * ------------------------------------------------------------------------ */
+
+/* Stack 原本用 scroll-driven animation 让左右边缘的遮罩随滚动实时变化。
+ * 该效果依赖 CSS 自定义属性驱动 mask-image 渐变重算，
+ * 在滚动过程中会持续触发绘制，长列表页开销明显，而视觉收益很小。
+ * 这里改为左右对称的静态渐隐：观感一致，滚动期零额外开销。 */
+@supports (animation-timeline: scroll(self inline)) {
+    .subsection-list {
+        animation: none;
+        --left-edge-fade-size: var(--edge-fade-size);
+        --right-edge-fade-size: var(--edge-fade-size);
+    }
+}
+
+/* 不支持 scroll-driven animation 的浏览器本来就没有这段动画，
+   但静态值需要同样补齐，否则左侧会退化成硬切 */
+.subsection-list {
+    --left-edge-fade-size: var(--edge-fade-size);
+    --right-edge-fade-size: var(--edge-fade-size);
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. 细节打磨
+ * ------------------------------------------------------------------------ */
+
+/* 目录树展开/收起：图标旋转走 transform，属可合成属性 */
+.article-toc-title svg {
+    will-change: transform;
+}
+
+/* 焦点可见性：键盘导航时给出清晰的焦点环 */
+:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}

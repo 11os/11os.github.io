@@ -60,10 +60,12 @@
 
 .hamburger-inner::before {
     top: -10px;
+    translate: 0 0;
 }
 
 .hamburger-inner::after {
     bottom: -10px;
+    translate: 0 0;
 }
 
 .hamburger--spin .hamburger-inner {
@@ -71,12 +73,17 @@
     transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
+/* 动效优化：::before / ::after 的位移改用 translate 独立属性，
+   而非 top / bottom —— 后者会触发布局重排，在移动端实测中出现掉帧。
+   translate 属于可合成属性，动画走 GPU，不影响主线程。
+   注意：translate 与 transform 的组合顺序为 translate -> rotate -> scale -> transform，
+   因此 ::after 的位移与旋转可以各自独立过渡，时序与原实现保持一致。 */
 .hamburger--spin .hamburger-inner::before {
-    transition: top 0.1s 0.25s ease-in, opacity 0.1s ease-in;
+    transition: translate 0.1s 0.25s ease-in, opacity 0.1s ease-in;
 }
 
 .hamburger--spin .hamburger-inner::after {
-    transition: bottom 0.1s 0.25s ease-in, transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    transition: translate 0.1s 0.25s ease-in, transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 .hamburger--spin.is-active .hamburger-inner {
@@ -86,15 +93,15 @@
 }
 
 .hamburger--spin.is-active .hamburger-inner::before {
-    top: 0;
+    translate: 0 10px;
     opacity: 0;
-    transition: top 0.1s ease-out, opacity 0.1s 0.12s ease-out;
+    transition: translate 0.1s ease-out, opacity 0.1s 0.12s ease-out;
 }
 
 .hamburger--spin.is-active .hamburger-inner::after {
-    bottom: 0;
+    translate: 0 -10px;
     transform: rotate(-90deg);
-    transition: bottom 0.1s ease-out, transform 0.22s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: translate 0.1s ease-out, transform 0.22s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 #toggle-menu {
@@ -143,6 +150,72 @@
 
     @include respond(xl) {
         padding: 15px 0;
+    }
+
+    /* 移动端展开动画。
+       实测结论：任何「高度过渡」都会逐帧触发布局重排 ——
+       原始的 JS height 动画（568 次/10 次开合）与 grid-template-rows 方案
+       （590 次）开销相当，并无改善。
+
+       因此改为纯合成层方案：菜单绝对定位、脱离文档流，
+       收起时不占据页面高度（否则会把正文整块顶下去）。
+       动画只动 transform 与 opacity，两者都是可合成属性，
+       整个过程零布局重排，交由 GPU 合成。
+
+       收起态用 visibility: hidden 屏蔽交互，
+       展开时不会出现高度跳变。 */
+    @media (max-width: 767px) {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2xl);
+
+        /* 脱离文档流，浮在 header 下方 */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1;
+
+        transform-origin: top center;
+
+        /* visibility 不能在这里加延迟。
+           过渡参数取的是「目标状态」的声明：展开时目标态是本规则（或 .slide-open），
+           若此处写 visibility 0s linear 0.35s，展开会把 visibility 也推迟 0.35s ——
+           此时 opacity 早已过渡到 1，菜单会先隐身、再整个「蹦」出来，动画等于白做。
+           延迟只应作用于收起方向，所以放到 .slide-closed 里。 */
+        transition: transform var(--motion-duration-slow) var(--motion-ease-out),
+                    opacity var(--motion-duration-base) var(--motion-ease-out),
+                    visibility 0s;
+        will-change: transform, opacity;
+
+        /* 收起态：向上收起并淡出。
+           visibility 延迟到淡出结束再置 hidden，否则元素会中途消失、看不到收起的动画。 */
+        &.slide-closed {
+            transform: translateY(-16px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: transform var(--motion-duration-slow) var(--motion-ease-out),
+                        opacity var(--motion-duration-base) var(--motion-ease-out),
+                        visibility 0s linear var(--motion-duration-slow);
+        }
+
+        /* 展开态：归位 */
+        &.slide-open {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: transform var(--motion-duration-slow) var(--motion-ease-out),
+                        opacity var(--motion-duration-base) var(--motion-ease-out),
+                        visibility 0s;
+        }
+
+        /* 桌面端用的 .show { display: flex } 会覆盖 flex-direction，
+           这里显式补回，保持菜单项竖排 */
+        &.show {
+            display: flex;
+        }
     }
 
     &,

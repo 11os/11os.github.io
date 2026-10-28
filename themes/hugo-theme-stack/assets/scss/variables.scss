@@ -8,6 +8,14 @@
         --main-top-padding: 50px;
     }
 
+    /* 动效 token —— 统一全站动画的时长与缓动曲线，
+       避免各组件各用各的节奏造成割裂感。 */
+    --motion-duration-fast: 0.15s;
+    --motion-duration-base: 0.25s;
+    --motion-duration-slow: 0.35s;
+    --motion-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
     --body-background: #f5f5fa;
 
     --accent-color: #34495e;

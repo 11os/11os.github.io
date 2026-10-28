@@ -1,6 +1,8 @@
 ---
 title: "搜索"
 layout: "search"
+type: "page"
+outputs: ["html", "json"]
 slug: "search"
 date: 2026-10-26
 description: "搜索站内文章"

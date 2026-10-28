@@ -72,7 +72,7 @@
         svg {
             color: var(--card-text-color-secondary);
             stroke-width: 1.33;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease, stroke-width 0.3s ease;
             width: 20px;
             height: 20px;
         }
