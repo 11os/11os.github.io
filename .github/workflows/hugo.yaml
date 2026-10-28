@@ -2,7 +2,6 @@ name: Build and deploy
 
 env:
   HUGO_VERSION: 0.168.0
-  DART_SASS_VERSION: 1.105.1
   TZ: Asia/Shanghai
 
 on:
@@ -33,19 +32,16 @@ jobs:
           fetch-depth: 0
           lfs: false
 
+      # Stack 主题的 style.html 用 `toCSS` 且未指定 transpiler，走的是 libsass
+      # （Hugo extended 内置）。2026-10-28 用 CSS 指纹比对确认：加装 Dart Sass 后
+      # 产物完全没变，那一步纯空转 + 一个额外失败点，已删除。
+      # 等主题迁到 dartsass（libsass 已被 Hugo 0.153 弃用）时，再把安装步骤加回来，
+      # 注意 tar 解出来是 dart-sass/dart-sass/sass，PATH 要指到里层目录。
       - name: Setup Hugo (extended)
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true
-
-      - name: Install Dart Sass
-        run: |
-          echo "Installing Dart Sass ${DART_SASS_VERSION}..."
-          curl -sfL --output-dir "${{ runner.temp }}" -O "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
-          mkdir -p "${HOME}/.local/dart-sass"
-          tar -C "${HOME}/.local/dart-sass" -xf "${{ runner.temp }}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
-          echo "${HOME}/.local/dart-sass" >> "${GITHUB_PATH}"
 
       - name: Log tool versions
         run: |
