@@ -14,3 +14,6 @@ Thumbs.db
 
 # 日志
 *.log
+
+# 本地 AI 工作目录：主题备份、实验副本、记忆笔记都不进仓库
+/.workbuddy-ai/
