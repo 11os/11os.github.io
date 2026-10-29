@@ -5,7 +5,7 @@ Hugo 个人站点（Stack 主题 vendor 在 `themes/`），推 `master` 即由 G
 
 ## 开工前先读（存在才读，不存在就跳过）
 
-- **本机长期记忆**：`.workbuddy-ai/memory/MEMORY.md`（不进仓库）。当天的坑在同目录 `YYYY-MM-DD.md`，**按日期查，别全量读**。
+- **本机长期记忆**：`.agents/memory/MEMORY.md`（与 AI 工具无关，不进仓库）。当天的坑在同目录 `YYYY-MM-DD.md`，**按日期查，别全量读**。
 
 ## 外部大脑（brain）
 
@@ -24,7 +24,7 @@ $hugo = 'C:\Users\1\.workbuddy-ai\binaries\hugo\hugo.exe'   # 0.168.0 +extended
 & $hugo build --gc --minify --noBuildLock                        # 构建（CI 同参数，另加 --baseURL）
 ```
 
-无 Node / npm / go 依赖，不需要装任何东西。构建时的 libsass 弃用告警是**正常**的，别为它去装 Dart Sass（原因见 `.workbuddy-ai/memory/2026-10-28.md`）。
+无 Node / npm / go 依赖，不需要装任何东西。构建时的 libsass 弃用告警是**正常**的，别为它去装 Dart Sass（原因见 `.agents/memory/2026-10-28.md`）。
 
 ## 仓库约定
 
@@ -35,7 +35,7 @@ $hugo = 'C:\Users\1\.workbuddy-ai\binaries\hugo\hugo.exe'   # 0.168.0 +extended
 | `config/_default/` | `hugo.toml` / `params.toml` / `markup.toml` |
 | `themes/hugo-theme-stack/` | vendor **且已本地改动**（`menu.ts`、`motion.scss` 等）。升级要人工合并，禁止整体覆盖 |
 | `static/img/` | 原样直出，Hugo 不处理（没有 srcset 和宽高） |
-| `public/`、`resources/`、`.workbuddy-ai/` | 已 gitignore，不要提交 |
+| `public/`、`resources/`、`.workbuddy-ai/`、`.agents/` | 已 gitignore，不要提交 |
 
 ## 发布
 
@@ -47,4 +47,4 @@ $hugo = 'C:\Users\1\.workbuddy-ai\binaries\hugo\hugo.exe'   # 0.168.0 +extended
 
 - 不为了顺手优化去改 `themes/` 的上游文件（本地 diff 已经够多），除非用户点名。
 - 不手改 `public/`、不绕开 CI 往线上传文件。
-- 不把 `.workbuddy-ai/memory/` 的内容复制进本文档或 README —— 引用即可。
+- 不把 `.agents/memory/` 的内容复制进本文档或 README —— 引用即可。
