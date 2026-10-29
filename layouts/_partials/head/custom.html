@@ -1,0 +1,45 @@
+<style>
+  .article-content img { cursor: zoom-in; }
+  #img-zoom { position: fixed; inset: 0; z-index: 9999; display: none;
+    align-items: center; justify-content: center; padding: 2vmin;
+    background: rgba(0, 0, 0, 0.9); cursor: zoom-out; }
+  #img-zoom.on { display: flex; }
+  #img-zoom img { max-width: 100%; max-height: 100%; object-fit: contain; }
+</style>
+<script>
+  // 文章配图点击放大：无依赖、无 CDN。点图放大，点任意处或按 Esc 关闭。
+  document.addEventListener('DOMContentLoaded', function () {
+    var content = document.querySelector('.article-content');
+    if (!content) return;
+
+    var box = document.createElement('div');
+    box.id = 'img-zoom';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', '图片放大');
+    box.appendChild(document.createElement('img'));
+    document.body.appendChild(box);
+
+    var big = box.querySelector('img');
+
+    function close() {
+      box.classList.remove('on');
+      big.removeAttribute('src');
+      document.body.style.overflow = '';
+    }
+
+    content.addEventListener('click', function (e) {
+      var img = e.target.closest('img');
+      if (!img) return;
+      big.src = img.currentSrc || img.src;
+      big.alt = img.alt || '';
+      box.classList.add('on');
+      document.body.style.overflow = 'hidden';
+    });
+
+    box.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+  });
+</script>
